@@ -52,7 +52,6 @@
       color: white;
       font-weight: bold;
       font-size: 18px;
-      border-radius: 0 3px 3px 0;
       user-select: none;
       background-color: rgba(0,0,0,0.5);
       z-index: 999;
@@ -67,32 +66,86 @@
     }
     .download-button {
       margin-top: 20px;
-      padding: 10px 20px;
-      background: #2ecc71;
+      padding: 12px 25px;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
       border: none;
-      color: white;
+      color: #111;
       font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
-      border-radius: 5px;
+      border-radius: 25px;
       text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+    .download-button:hover {
+      background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+    }
+    .view-all-button {
+      margin-top: 10px;
+      background: transparent;
+      color: #00b894;
+      border: 2px solid #00b894;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .grid-view {
+      display: none;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 20px;
+      background-color: #111;
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+    .grid-view img {
+      width: 150px;
+      height: auto;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    .grid-view img:hover {
+      transform: scale(1.05);
+    }
+    .close-grid {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div class="slideshow-container" id="slideshow">
-    <!-- Slides inserted via JS -->
     <a class="nav-button prev" onclick="plusSlides(-1)">&#10094;</a>
     <a class="nav-button next" onclick="plusSlides(1)">&#10095;</a>
   </div>
   <div class="caption" id="caption">Typography 1</div>
   <a class="download-button" id="downloadBtn" href="1.png" download>Download This Image</a>
+  <button class="view-all-button" onclick="toggleGrid(true)">View All</button>
+
+  <div class="grid-view" id="gridView"></div>
+  <button class="close-grid" onclick="toggleGrid(false)" style="display:none;">X</button>
 
   <script>
     const slideCount = 29;
     const slideshow = document.getElementById("slideshow");
+    const gridView = document.getElementById("gridView");
+    const closeBtn = document.querySelector(".close-grid");
     let slideIndex = 1;
 
     for (let i = 1; i <= slideCount; i++) {
+      // Slideshow slides
       const slideDiv = document.createElement("div");
       slideDiv.classList.add("slide");
       const img = document.createElement("img");
@@ -100,6 +153,16 @@
       img.alt = `Typography ${i}`;
       slideDiv.appendChild(img);
       slideshow.appendChild(slideDiv);
+
+      // Grid view
+      const gridImg = document.createElement("img");
+      gridImg.src = `${i}.png`;
+      gridImg.alt = `Typography ${i}`;
+      gridImg.onclick = () => {
+        toggleGrid(false);
+        showSlides(slideIndex = i);
+      };
+      gridView.appendChild(gridImg);
     }
 
     showSlides(slideIndex);
@@ -118,6 +181,15 @@
       slides[slideIndex-1].style.display = "block";
       document.getElementById("caption").innerText = `Typography ${slideIndex}`;
       document.getElementById("downloadBtn").href = `${slideIndex}.png`;
+    }
+
+    function toggleGrid(show) {
+      gridView.style.display = show ? "flex" : "none";
+      slideshow.style.display = show ? "none" : "block";
+      document.querySelector(".caption").style.display = show ? "none" : "block";
+      document.getElementById("downloadBtn").style.display = show ? "none" : "inline-block";
+      document.querySelector(".view-all-button").style.display = show ? "none" : "inline-block";
+      closeBtn.style.display = show ? "block" : "none";
     }
   </script>
 </body>
