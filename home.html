@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Creative Portfolio - Slideshow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     * {
       margin: 0;
@@ -16,13 +17,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      justify-content: flex-start;
+      padding: 40px 20px;
+      min-height: 100vh;
     }
     .slideshow-container {
       position: relative;
       max-width: 90vw;
-      max-height: 90vh;
+      max-height: 80vh;
       overflow: hidden;
     }
     .slide {
@@ -31,65 +33,41 @@
     .slide img {
       width: 100%;
       height: auto;
-      max-height: 80vh;
+      max-height: 70vh;
       object-fit: contain;
       border-radius: 10px;
       box-shadow: 0 0 20px rgba(255,255,255,0.1);
     }
     .caption {
       text-align: center;
-      margin-top: 10px;
+      margin: 10px 0;
       font-size: 1rem;
       color: #ccc;
     }
-    .nav-button {
+    .nav-buttons-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+      width: 100%;
+      max-width: 600px;
+    }
+    .nav-button, .download-button, .view-all-button, .back-button {
       cursor: pointer;
-      position: absolute;
-      top: 50%;
-      width: auto;
-      padding: 16px;
-      margin-top: -22px;
-      color: white;
-      font-weight: bold;
-      font-size: 18px;
-      user-select: none;
-      background-color: rgba(0,0,0,0.5);
-      z-index: 999;
-    }
-    .prev {
-      left: 0;
-      border-radius: 3px 0 0 3px;
-    }
-    .next {
-      right: 0;
-      border-radius: 0 3px 3px 0;
-    }
-    .download-button {
-      margin-top: 20px;
-      padding: 12px 25px;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      padding: 10px 20px;
+      font-size: 15px;
+      font-weight: 500;
       border: none;
-      color: #111;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 25px;
-      text-decoration: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      transition: all 0.3s ease;
-    }
-    .download-button:hover {
-      background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
-    }
-    .view-all-button {
-      margin-top: 10px;
-      background: transparent;
-      color: #00b894;
-      border: 2px solid #00b894;
-      padding: 8px 16px;
       border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
+      background-color: #222;
+      color: white;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+    .nav-button:hover, .download-button:hover, .view-all-button:hover, .back-button:hover {
+      background-color: #333;
+      transform: translateY(-1px);
     }
     .grid-view {
       display: none;
@@ -102,7 +80,7 @@
       max-height: 90vh;
     }
     .grid-view img {
-      width: 150px;
+      width: 120px;
       height: auto;
       border-radius: 5px;
       cursor: pointer;
@@ -112,6 +90,7 @@
       transform: scale(1.05);
     }
     .close-grid {
+      display: none;
       position: absolute;
       top: 20px;
       right: 20px;
@@ -122,30 +101,43 @@
       font-size: 16px;
       border-radius: 5px;
       cursor: pointer;
+      z-index: 999;
+    }
+    @media (max-width: 600px) {
+      .nav-buttons-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .nav-button, .download-button, .view-all-button, .back-button {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="slideshow-container" id="slideshow">
-    <a class="nav-button prev" onclick="plusSlides(-1)">&#10094;</a>
-    <a class="nav-button next" onclick="plusSlides(1)">&#10095;</a>
-  </div>
+  <div class="slideshow-container" id="slideshow"></div>
   <div class="caption" id="caption">Typography 1</div>
-  <a class="download-button" id="downloadBtn" href="1.png" download>Download This Image</a>
-  <button class="view-all-button" onclick="toggleGrid(true)">View All</button>
+
+  <div class="nav-buttons-wrapper">
+    <button class="nav-button" onclick="plusSlides(-1)">Previous</button>
+    <button class="nav-button" onclick="plusSlides(1)">Next</button>
+    <button class="download-button" id="downloadBtn">Download</button>
+    <button class="view-all-button" onclick="toggleGrid(true)">View All</button>
+    <button class="back-button" onclick="toggleGrid(false)" style="display:none;">Back</button>
+  </div>
 
   <div class="grid-view" id="gridView"></div>
-  <button class="close-grid" onclick="toggleGrid(false)" style="display:none;">X</button>
-
   <script>
     const slideCount = 29;
     const slideshow = document.getElementById("slideshow");
     const gridView = document.getElementById("gridView");
-    const closeBtn = document.querySelector(".close-grid");
+    const caption = document.getElementById("caption");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const viewAllBtn = document.querySelector(".view-all-button");
+    const backBtn = document.querySelector(".back-button");
     let slideIndex = 1;
 
     for (let i = 1; i <= slideCount; i++) {
-      // Slideshow slides
       const slideDiv = document.createElement("div");
       slideDiv.classList.add("slide");
       const img = document.createElement("img");
@@ -154,7 +146,6 @@
       slideDiv.appendChild(img);
       slideshow.appendChild(slideDiv);
 
-      // Grid view
       const gridImg = document.createElement("img");
       gridImg.src = `${i}.png`;
       gridImg.alt = `Typography ${i}`;
@@ -173,23 +164,33 @@
 
     function showSlides(n) {
       let slides = document.getElementsByClassName("slide");
-      if (n > slides.length) {slideIndex = 1}
-      if (n < 1) {slideIndex = slides.length}
+      if (n > slides.length) {slideIndex = 1;}
+      if (n < 1) {slideIndex = slides.length;}
       for (let i = 0; i < slides.length; i++) {
         slides[i].style.display = "none";
       }
       slides[slideIndex-1].style.display = "block";
-      document.getElementById("caption").innerText = `Typography ${slideIndex}`;
-      document.getElementById("downloadBtn").href = `${slideIndex}.png`;
+      caption.innerText = `Typography ${slideIndex}`;
     }
+
+    downloadBtn.addEventListener("click", () => {
+      const imageUrl = `${slideIndex}.png`;
+      const a = document.createElement("a");
+      a.href = imageUrl;
+      a.download = `Typography-${slideIndex}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
 
     function toggleGrid(show) {
       gridView.style.display = show ? "flex" : "none";
       slideshow.style.display = show ? "none" : "block";
-      document.querySelector(".caption").style.display = show ? "none" : "block";
-      document.getElementById("downloadBtn").style.display = show ? "none" : "inline-block";
-      document.querySelector(".view-all-button").style.display = show ? "none" : "inline-block";
-      closeBtn.style.display = show ? "block" : "none";
+      caption.style.display = show ? "none" : "block";
+      document.querySelector(".nav-buttons-wrapper").style.display = "flex";
+      downloadBtn.style.display = show ? "none" : "inline-block";
+      viewAllBtn.style.display = show ? "none" : "inline-block";
+      backBtn.style.display = show ? "inline-block" : "none";
     }
   </script>
 </body>
