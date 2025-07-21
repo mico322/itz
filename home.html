@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Creative Portfolio - Slideshow</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .slideshow-container {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow: hidden;
+    }
+    .slide {
+      display: none;
+    }
+    .slide img {
+      width: 100%;
+      height: auto;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    }
+    .caption {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    .nav-button {
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      width: auto;
+      padding: 16px;
+      margin-top: -22px;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      border-radius: 0 3px 3px 0;
+      user-select: none;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 999;
+    }
+    .prev {
+      left: 0;
+      border-radius: 3px 0 0 3px;
+    }
+    .next {
+      right: 0;
+      border-radius: 0 3px 3px 0;
+    }
+    .download-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #2ecc71;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="slideshow-container" id="slideshow">
+    <!-- Slides inserted via JS -->
+    <a class="nav-button prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="nav-button next" onclick="plusSlides(1)">&#10095;</a>
+  </div>
+  <div class="caption" id="caption">Typography 1</div>
+  <a class="download-button" id="downloadBtn" href="1.png" download>Download This Image</a>
+
+  <script>
+    const slideCount = 29;
+    const slideshow = document.getElementById("slideshow");
+    let slideIndex = 1;
+
+    for (let i = 1; i <= slideCount; i++) {
+      const slideDiv = document.createElement("div");
+      slideDiv.classList.add("slide");
+      const img = document.createElement("img");
+      img.src = `${i}.png`;
+      img.alt = `Typography ${i}`;
+      slideDiv.appendChild(img);
+      slideshow.appendChild(slideDiv);
+    }
+
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+      showSlides(slideIndex += n);
+    }
+
+    function showSlides(n) {
+      let slides = document.getElementsByClassName("slide");
+      if (n > slides.length) {slideIndex = 1}
+      if (n < 1) {slideIndex = slides.length}
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+      }
+      slides[slideIndex-1].style.display = "block";
+      document.getElementById("caption").innerText = `Typography ${slideIndex}`;
+      document.getElementById("downloadBtn").href = `${slideIndex}.png`;
+    }
+  </script>
+</body>
+</html>
