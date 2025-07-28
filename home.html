@@ -126,72 +126,77 @@
     <button class="back-button" onclick="toggleGrid(false)" style="display:none;">Back</button>
   </div>
 
-  <div class="grid-view" id="gridView"></div>
-  <script>
-    const slideCount = 19;
-    const slideshow = document.getElementById("slideshow");
-    const gridView = document.getElementById("gridView");
-    const caption = document.getElementById("caption");
-    const downloadBtn = document.getElementById("downloadBtn");
-    const viewAllBtn = document.querySelector(".view-all-button");
-    const backBtn = document.querySelector(".back-button");
-    let slideIndex = 1;
+  <div class="grid-view" id="gridView"></div><script>
+  const slideCount = 29;
+  const slideshow = document.getElementById("slideshow");
+  const gridView = document.getElementById("gridView");
+  const caption = document.getElementById("caption");
+  const downloadBtn = document.getElementById("downloadBtn");
+  const viewAllBtn = document.querySelector(".view-all-button");
+  const backBtn = document.querySelector(".back-button");
+  let slideIndex = 1;
 
-    for (let i = 1; i <= slideCount; i++) {
-      const slideDiv = document.createElement("div");
-      slideDiv.classList.add("slide");
-      const img = document.createElement("img");
-      img.src = `${i}.png`;
-      img.alt = `Typography ${i}`;
-      slideDiv.appendChild(img);
-      slideshow.appendChild(slideDiv);
+  for (let i = 1; i <= slideCount; i++) {
+    const slideDiv = document.createElement("div");
+    slideDiv.classList.add("slide");
 
-      const gridImg = document.createElement("img");
-      gridImg.src = `${i}.png`;
-      gridImg.alt = `Typography ${i}`;
-      gridImg.onclick = () => {
-        toggleGrid(false);
-        showSlides(slideIndex = i);
-      };
-      gridView.appendChild(gridImg);
+    const img = document.createElement("img");
+    img.src = `${i}.png`;
+    img.alt = `Typography ${i}`;
+    img.onerror = () => img.src = `${i}.jpg`; // fallback to JPG
+    slideDiv.appendChild(img);
+    slideshow.appendChild(slideDiv);
+
+    const gridImg = document.createElement("img");
+    gridImg.src = `${i}.png`;
+    gridImg.alt = `Typography ${i}`;
+    gridImg.onerror = () => gridImg.src = `${i}.jpg`; // fallback to JPG
+    gridImg.onclick = () => {
+      toggleGrid(false);
+      showSlides(slideIndex = i);
+    };
+    gridView.appendChild(gridImg);
+  }
+
+  showSlides(slideIndex);
+
+  function plusSlides(n) {
+    showSlides(slideIndex += n);
+  }
+
+  function showSlides(n) {
+    let slides = document.getElementsByClassName("slide");
+    if (n > slides.length) { slideIndex = 1; }
+    if (n < 1) { slideIndex = slides.length; }
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
     }
+    slides[slideIndex - 1].style.display = "block";
+    caption.innerText = `Typography ${slideIndex}`;
+  }
 
-    showSlides(slideIndex);
+  downloadBtn.addEventListener("click", () => {
+    const img = document.querySelectorAll(".slide img")[slideIndex - 1];
+    const imageUrl = img.src;
+    const extension = imageUrl.endsWith(".jpg") ? "jpg" : "png";
+    const a = document.createElement("a");
+    a.href = imageUrl;
+    a.download = `Typography-${slideIndex}.${extension}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
 
-    function plusSlides(n) {
-      showSlides(slideIndex += n);
-    }
+  function toggleGrid(show) {
+    gridView.style.display = show ? "flex" : "none";
+    slideshow.style.display = show ? "none" : "block";
+    caption.style.display = show ? "none" : "block";
+    document.querySelector(".nav-buttons-wrapper").style.display = "flex";
+    downloadBtn.style.display = show ? "none" : "inline-block";
+    viewAllBtn.style.display = show ? "none" : "inline-block";
+    backBtn.style.display = show ? "inline-block" : "none";
+  }
+</script>
 
-    function showSlides(n) {
-      let slides = document.getElementsByClassName("slide");
-      if (n > slides.length) {slideIndex = 1;}
-      if (n < 1) {slideIndex = slides.length;}
-      for (let i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";
-      }
-      slides[slideIndex-1].style.display = "block";
-      caption.innerText = `Typography ${slideIndex}`;
-    }
-
-    downloadBtn.addEventListener("click", () => {
-      const imageUrl = `${slideIndex}.png`;
-      const a = document.createElement("a");
-      a.href = imageUrl;
-      a.download = `Typography-${slideIndex}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    });
-
-    function toggleGrid(show) {
-      gridView.style.display = show ? "flex" : "none";
-      slideshow.style.display = show ? "none" : "block";
-      caption.style.display = show ? "none" : "block";
-      document.querySelector(".nav-buttons-wrapper").style.display = "flex";
-      downloadBtn.style.display = show ? "none" : "inline-block";
-      viewAllBtn.style.display = show ? "none" : "inline-block";
-      backBtn.style.display = show ? "inline-block" : "none";
-    }
-  </script>
 </body>
 </html>
