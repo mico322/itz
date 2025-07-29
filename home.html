@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Creative Portfolio - Slideshow</title>
+  <title></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     * {
@@ -10,26 +10,72 @@
       padding: 0;
       box-sizing: border-box;
     }
+
     body {
       font-family: Arial, sans-serif;
-      background-color: #111;
       color: white;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: center;
       padding: 40px 20px;
       min-height: 100vh;
+      background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(0,0,0,0.9)),
+                  url('https://cdn.dribbble.com/userupload/4995531/file/original-2e28c2c6661cc9e0ae3ed5b5594c7e90.gif') center/cover no-repeat;
+      background-attachment: fixed;
     }
+
+    #folderPanel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      background: linear-gradient(135deg, rgba(0,0,0,0.6), rgba(0,0,0,0.9)),
+                  url('https://static.vecteezy.com/system/resources/previews/0003/797/440/original/pixel-blur-background.jpg') center/cover no-repeat;
+      padding: 50px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+
+    #folderPanel h1 {
+      font-size: 32px;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .nav-button, .download-button, .view-all-button, .back-button {
+      cursor: pointer;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      background-color: #222;
+      color: white;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    .nav-button:hover, .download-button:hover, .view-all-button:hover, .back-button:hover {
+      background-color: #333;
+      transform: translateY(-1px);
+    }
+
     .slideshow-container {
       position: relative;
       max-width: 90vw;
       max-height: 80vh;
       overflow: hidden;
     }
+
     .slide {
       display: none;
     }
+
     .slide img {
       width: 100%;
       height: auto;
@@ -38,37 +84,24 @@
       border-radius: 10px;
       box-shadow: 0 0 20px rgba(255,255,255,0.1);
     }
+
     .caption {
       text-align: center;
       margin: 10px 0;
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: #ccc;
     }
+
     .nav-buttons-wrapper {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 10px;
-      margin: 20px 0;
+      gap: 12px;
+      margin: 20px auto;
       width: 100%;
-      max-width: 600px;
+      max-width: 620px;
     }
-    .nav-button, .download-button, .view-all-button, .back-button {
-      cursor: pointer;
-      padding: 10px 20px;
-      font-size: 15px;
-      font-weight: 500;
-      border: none;
-      border-radius: 5px;
-      background-color: #222;
-      color: white;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-    }
-    .nav-button:hover, .download-button:hover, .view-all-button:hover, .back-button:hover {
-      background-color: #333;
-      transform: translateY(-1px);
-    }
+
     .grid-view {
       display: none;
       flex-wrap: wrap;
@@ -79,6 +112,7 @@
       overflow-y: auto;
       max-height: 90vh;
     }
+
     .grid-view img {
       width: 120px;
       height: auto;
@@ -86,37 +120,68 @@
       cursor: pointer;
       transition: 0.3s ease;
     }
+
     .grid-view img:hover {
       transform: scale(1.05);
     }
-    .close-grid {
-      display: none;
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: #e74c3c;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 999;
-    }
+
     @media (max-width: 600px) {
       .nav-buttons-wrapper {
         flex-direction: column;
-        align-items: stretch;
+        align-items: center;
       }
+
       .nav-button, .download-button, .view-all-button, .back-button {
         width: 100%;
       }
     }
+
+
+
+
+
+#floatingLogo {
+  position: fixed;
+  top: 20px;
+  left: 220px;
+  z-index: 999;
+
+}
+
+#floatingLogo img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  display: block;
+}
+
+#floatingLogo:hover {
+  transform: scale(1.1);
+}
+
+
+
+
+
+
+
+
   </style>
 </head>
 <body>
+<div id="floatingLogo">
+  <img src="logo.png" alt="Logo">
+</div>
+
+<div id="folderPanel">
+  <h1>📂 Select Folder</h1>
+  <button class="nav-button" onclick="loadFolder('new')">View NEW 📁</button>
+  <button class="nav-button" onclick="loadFolder('old')">View OLD 📂</button>
+</div>
+
+<div id="mainContent" style="display:none;">
   <div class="slideshow-container" id="slideshow"></div>
-  <div class="caption" id="caption">Typography 1</div>
+  <div class="caption" id="caption"></div>
 
   <div class="nav-buttons-wrapper">
     <button class="nav-button" onclick="plusSlides(-1)">Previous</button>
@@ -124,41 +189,60 @@
     <button class="download-button" id="downloadBtn">Download</button>
     <button class="view-all-button" onclick="toggleGrid(true)">View All</button>
     <button class="back-button" onclick="toggleGrid(false)" style="display:none;">Back</button>
+    <button class="nav-button" onclick="goHome()">Home</button>
   </div>
 
-  <div class="grid-view" id="gridView"></div><script>
-  const slideCount = 29;
+  <div class="grid-view" id="gridView"></div>
+</div>
+
+<script>
   const slideshow = document.getElementById("slideshow");
   const gridView = document.getElementById("gridView");
   const caption = document.getElementById("caption");
   const downloadBtn = document.getElementById("downloadBtn");
   const viewAllBtn = document.querySelector(".view-all-button");
   const backBtn = document.querySelector(".back-button");
+
   let slideIndex = 1;
+  let currentFolder = "";
 
-  for (let i = 1; i <= slideCount; i++) {
-    const slideDiv = document.createElement("div");
-    slideDiv.classList.add("slide");
-
-    const img = document.createElement("img");
-    img.src = `${i}.png`;
-    img.alt = `Typography ${i}`;
-    img.onerror = () => img.src = `${i}.jpg`; // fallback to JPG
-    slideDiv.appendChild(img);
-    slideshow.appendChild(slideDiv);
-
-    const gridImg = document.createElement("img");
-    gridImg.src = `${i}.png`;
-    gridImg.alt = `Typography ${i}`;
-    gridImg.onerror = () => gridImg.src = `${i}.jpg`; // fallback to JPG
-    gridImg.onclick = () => {
-      toggleGrid(false);
-      showSlides(slideIndex = i);
-    };
-    gridView.appendChild(gridImg);
+  function loadFolder(folderName) {
+    currentFolder = folderName;
+    document.getElementById("folderPanel").style.display = "none";
+    document.getElementById("mainContent").style.display = "block";
+    loadImages();
   }
 
-  showSlides(slideIndex);
+  function loadImages() {
+    slideshow.innerHTML = "";
+    gridView.innerHTML = "";
+
+    const slideCount = 29;
+
+    for (let i = 1; i <= slideCount; i++) {
+      const slideDiv = document.createElement("div");
+      slideDiv.classList.add("slide");
+
+      const img = document.createElement("img");
+      img.src = `${currentFolder}/${i}.png`;
+      img.alt = `Typography ${i}`;
+      img.onerror = () => img.src = `${currentFolder}/${i}.jpg`;
+      slideDiv.appendChild(img);
+      slideshow.appendChild(slideDiv);
+
+      const gridImg = document.createElement("img");
+      gridImg.src = `${currentFolder}/${i}.png`;
+      gridImg.alt = `Typography ${i}`;
+      gridImg.onerror = () => gridImg.src = `${currentFolder}/${i}.jpg`;
+      gridImg.onclick = () => {
+        toggleGrid(false);
+        showSlides(slideIndex = i);
+      };
+      gridView.appendChild(gridImg);
+    }
+
+    showSlides(slideIndex = 1);
+  }
 
   function plusSlides(n) {
     showSlides(slideIndex += n);
@@ -166,8 +250,8 @@
 
   function showSlides(n) {
     let slides = document.getElementsByClassName("slide");
-    if (n > slides.length) { slideIndex = 1; }
-    if (n < 1) { slideIndex = slides.length; }
+    if (n > slides.length) slideIndex = 1;
+    if (n < 1) slideIndex = slides.length;
     for (let i = 0; i < slides.length; i++) {
       slides[i].style.display = "none";
     }
@@ -191,10 +275,17 @@
     gridView.style.display = show ? "flex" : "none";
     slideshow.style.display = show ? "none" : "block";
     caption.style.display = show ? "none" : "block";
-    document.querySelector(".nav-buttons-wrapper").style.display = "flex";
     downloadBtn.style.display = show ? "none" : "inline-block";
     viewAllBtn.style.display = show ? "none" : "inline-block";
     backBtn.style.display = show ? "inline-block" : "none";
+  }
+
+  function goHome() {
+    document.getElementById("mainContent").style.display = "none";
+    document.getElementById("folderPanel").style.display = "flex";
+    slideshow.innerHTML = "";
+    gridView.innerHTML = "";
+    caption.innerText = "";
   }
 </script>
 
